@@ -71,10 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\ShalltearMoist\Documents\Projects\pd3gg\MinHook;C:\Users\ShalltearMoist\Documents\Projects\pd3gg\ImGui;C:\Users\ShalltearMoist\Documents\Projects\pd3gg\Dumper7;C:\Users\ShalltearMoist\Documents\Projects\pd3gg\Dumper7\SDK</IncludePath>
+    <IncludePath>C:\Users\ShalltearMoist\Documents\GitHub\PD3-GG\MinHook;C:\Users\ShalltearMoist\Documents\GitHub\PD3-GG\ImGui;C:\Users\ShalltearMoist\Documents\GitHub\PD3-GG\Dumper7;C:\Users\ShalltearMoist\Documents\GitHub\PD3-GG\Dumper7\SDK</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\ShalltearMoist\Documents\Projects\pd3gg\MinHook;C:\Users\ShalltearMoist\Documents\Projects\pd3gg\ImGui;C:\Users\ShalltearMoist\Documents\Projects\pd3gg\Dumper7;C:\Users\ShalltearMoist\Documents\Projects\pd3gg\Dumper7\SDK</IncludePath>
+    <IncludePath>C:\Users\ShalltearMoist\Documents\GitHub\PD3-GG\MinHook;C:\Users\ShalltearMoist\Documents\GitHub\PD3-GG\ImGui;C:\Users\ShalltearMoist\Documents\GitHub\PD3-GG\Dumper7;C:\Users\ShalltearMoist\Documents\GitHub\PD3-GG\Dumper7\SDK</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -140,6 +140,7 @@
       <PrecompiledHeaderFile>pch_wrapper.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -2579,6 +2580,10 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch_wrapper.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch_wrapper.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Dumper7\Basic.cpp" />
+    <ClCompile Include="Dumper7\CoreUObject_functions.cpp" />
+    <ClCompile Include="Dumper7\Engine_functions.cpp" />
+    <ClCompile Include="Dumper7\Starbreeze_functions.cpp" />
     <ClCompile Include="MinHook\buffer.c" />
     <ClCompile Include="MinHook\hde32.c" />
     <ClCompile Include="MinHook\hde64.c" />
