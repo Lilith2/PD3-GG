@@ -745,14 +745,14 @@ DWORD WINAPI MainThread(LPVOID dwModule)
 			g_ssdma->RenderReady.store(false);
 			g_ssdma->FoundBasePointers.store(false);
 			g_Running.store(false);
-
+			MH_RemoveHook(pProcessEvent);
 			g_Console->printdbg(g_Console->Colors.pink, "Sleeping 50ms to give everything a chance...");
 			std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
 			g_Console->~Console();
 			g_ssdma->~C_SSDMA();
 			//PR_hook.~VMTHook();
-			MH_RemoveHook(pProcessEvent);
+			
 			MH_Uninitialize();
 		}
 
