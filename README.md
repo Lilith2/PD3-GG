@@ -119,7 +119,7 @@ If you encounter bugs or have feature requests, please open an issue on the [Iss
 
 ## License
 
-This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE. See the [LICENSE]([LICENSE](https://github.com/Lilith2/PD3-GG/blob/main/LICENSE.txt)) file for details.
+This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE. See the [LICENSE](https://github.com/Lilith2/PD3-GG/blob/main/LICENSE.txt)) file for details.
 
 ## Disclaimer
 
