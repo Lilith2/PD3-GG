@@ -310,34 +310,32 @@ void __fastcall hkPE(SDK::UObject* obj, SDK::UFunction* func, void* params)
 									{
 										SDK::AActor* CurrentAActor = nullptr;
 
-										if (g_ssdma->_CurrentWorld->PersistentLevel->Actors.IsValid())
+										static auto UGameplayStatics = *(SDK::UGameplayStatics*)SDK::UGameplayStatics::StaticClass();
+										
+										UGameplayStatics.GetAllActorsOfClass(g_ssdma->_CurrentWorld, ACH_BaseCop_C, &g_ssdma->TArray_ASBZAICharacterList);
+
+										if (g_ssdma->TArray_ASBZAICharacterList.IsValid())
 										{
-											for (int i = 0; i < g_ssdma->_CurrentWorld->PersistentLevel->Actors.Num(); ++i)
+											for (int i = 0; i < g_ssdma->TArray_ASBZAICharacterList.Num(); ++i)
 											{
-												if (g_ssdma->_CurrentWorld->PersistentLevel->Actors.IsValidIndex(i))
+												if (g_ssdma->TArray_ASBZAICharacterList.IsValidIndex(i))
 												{
-													if (g_ssdma->_CurrentWorld->PersistentLevel->Actors[i])
+													if (g_ssdma->TArray_ASBZAICharacterList[i])
 													{
-														CurrentAActor = g_ssdma->_CurrentWorld->PersistentLevel->Actors[i];
+														CurrentAActor = g_ssdma->TArray_ASBZAICharacterList[i];
 														if (!CurrentAActor)
 															continue;
 
-														if (CurrentAActor->IsA(ACH_BaseCop_C))
+														SDK::ASBZAICharacter* player = reinterpret_cast<SDK::ASBZAICharacter*>(g_ssdma->_CurrentWorld->PersistentLevel->Actors[i]);
+														if (!player)
+															continue;
+
+														if (g_ssdma->Settings->b_VIPChams)
 														{
-															SDK::ASBZAICharacter* player = reinterpret_cast<SDK::ASBZAICharacter*>(g_ssdma->_CurrentWorld->PersistentLevel->Actors[i]);
-															if (!player)
-																continue;
-
-															//pd3gg!SDK::UObject::IsA()[C:\Users\ShalltearMoist\Documents\Projects\pd3gg\Dumper7\CoreUObject_functions.cpp:118]
-															//pd3gg!MainThread()[C:\Users\ShalltearMoist\Documents\Projects\pd3gg\ssmda.cpp:700]
-
-															if (g_ssdma->Settings->b_VIPChams)
+															if (player)
 															{
-																if (player)
-																{
-																	if (player->bIsAlive && player->bCanBeDamaged && !player->bActorIsBeingDestroyed && !player->bIsSurrendered)
-																		player->Multicast_SetMarked(true);
-																}
+																if (player->bIsAlive && player->bCanBeDamaged && !player->bActorIsBeingDestroyed && !player->bIsSurrendered)
+																	player->Multicast_SetMarked(true);
 															}
 														}
 													}

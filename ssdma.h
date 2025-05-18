@@ -185,7 +185,7 @@ namespace SSDMA_Base
 
 		struct CheatSettings
 		{
-			bool	b_ESP = true;
+			bool	b_ESP = false;
 			bool	b_PlayerESP = true;
 			bool	b_VIPChams = true;
 			bool	b_PlayerText = false;
@@ -200,6 +200,7 @@ namespace SSDMA_Base
 		static const int MAX_CHARACTERS = 256;
 		SDK::ASBZModuleActor* ASBZKeycardReaderList[64];
 		SDK::ASBZAICharacter* ASBZAICharacterList[MAX_CHARACTERS];
+		SDK::TArray<SDK::AActor*> TArray_ASBZAICharacterList;
 		//count of elements updated in post render loop
 		int _PlayerList = 0;
 		int _AIList = 0;
