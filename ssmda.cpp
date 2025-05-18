@@ -282,7 +282,7 @@ void __fastcall hkPE(SDK::UObject* obj, SDK::UFunction* func, void* params)
 	//	auto ptr = FuncParams->TargetData; //breakpoint here?
 	//}
 
-	if (g_ssdma->Settings->b_LogFunctions)
+	if (g_ssdma->Settings->b_LogFunctions && g_Running.load())
 	{
 		auto name = func->GetFullName();
 		auto idx = func->Index;
@@ -752,7 +752,7 @@ DWORD WINAPI MainThread(LPVOID dwModule)
 			g_Console->~Console();
 			g_ssdma->~C_SSDMA();
 			//PR_hook.~VMTHook();
-
+			MH_RemoveHook(pProcessEvent);
 			MH_Uninitialize();
 		}
 
