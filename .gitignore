@@ -11,3 +11,7 @@ pd3gg/x64/Debug/pd3gg.tlog/CL.write.1.tlog
 pd3gg/x64/Debug/ssmda.obj
 pd3gg/x64/Debug/vc143.idb
 pd3gg/x64/Debug/vc143.pdb
+*.obj
+*.tlog
+*.idb
+*.pdb
