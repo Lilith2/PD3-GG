@@ -7321,18 +7321,6 @@
     <ClCompile Include="MinHook\hookmain.cpp">
       <Filter>Source Files\MinHook CPP</Filter>
     </ClCompile>
-    <ClCompile Include="Dumper7\Basic.cpp">
-      <Filter>Header Files\Dumper7</Filter>
-    </ClCompile>
-    <ClCompile Include="Dumper7\CoreUObject_functions.cpp">
-      <Filter>Header Files\Dumper7</Filter>
-    </ClCompile>
-    <ClCompile Include="Dumper7\Engine_functions.cpp">
-      <Filter>Header Files\Dumper7</Filter>
-    </ClCompile>
-    <ClCompile Include="Dumper7\Starbreeze_functions.cpp">
-      <Filter>Header Files\Dumper7</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MinHook\minhook.def">

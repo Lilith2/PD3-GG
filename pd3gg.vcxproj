@@ -2579,10 +2579,6 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch_wrapper.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch_wrapper.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="Dumper7\Basic.cpp" />
-    <ClCompile Include="Dumper7\CoreUObject_functions.cpp" />
-    <ClCompile Include="Dumper7\Engine_functions.cpp" />
-    <ClCompile Include="Dumper7\Starbreeze_functions.cpp" />
     <ClCompile Include="MinHook\buffer.c" />
     <ClCompile Include="MinHook\hde32.c" />
     <ClCompile Include="MinHook\hde64.c" />

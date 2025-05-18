@@ -5,7 +5,7 @@
 #include <cwctype>
 
 
-#define PE_Address 0x1BD66A0
+#define PE_Address 0x1BE9420
 #define PE_IDX 69
 #define SCREENSPACE SDK::FVector2D(3440,1440)
 
@@ -288,6 +288,71 @@ void __fastcall hkPE(SDK::UObject* obj, SDK::UFunction* func, void* params)
 		auto idx = func->Index;
 		g_Console->WriteToFile("Func: %s , IDX: %d\n", name.c_str(), idx);
 	}
+
+	if (g_ssdma->safeToAccessMemory.load() && g_ssdma->FoundBasePointers.load() && g_ssdma->Settings->b_ESP)
+	{
+		if (g_ssdma->_CurrentWorld)
+		{
+			if (g_ssdma->_CurrentWorld->OwningGameInstance)
+			{
+				if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers.IsValidIndex(0))
+				{
+					if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0])
+					{
+						if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0]->PlayerController)
+						{
+							if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0]->PlayerController->Character)
+							{
+								if (reinterpret_cast<SDK::ASBZPlayerCharacter*>(g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0]->PlayerController->Character)->bIsAlive)
+								{
+									SDK::UClass* ACH_BaseCop_C = SDK::ACH_BaseCop_C::StaticClass();
+									if (ACH_BaseCop_C)
+									{
+										SDK::AActor* CurrentAActor = nullptr;
+
+										if (g_ssdma->_CurrentWorld->PersistentLevel->Actors.IsValid())
+										{
+											for (int i = 0; i < g_ssdma->_CurrentWorld->PersistentLevel->Actors.Num(); ++i)
+											{
+												if (g_ssdma->_CurrentWorld->PersistentLevel->Actors.IsValidIndex(i))
+												{
+													if (g_ssdma->_CurrentWorld->PersistentLevel->Actors[i])
+													{
+														CurrentAActor = g_ssdma->_CurrentWorld->PersistentLevel->Actors[i];
+														if (!CurrentAActor)
+															continue;
+
+														if (CurrentAActor->IsA(ACH_BaseCop_C))
+														{
+															SDK::ASBZAICharacter* player = reinterpret_cast<SDK::ASBZAICharacter*>(g_ssdma->_CurrentWorld->PersistentLevel->Actors[i]);
+															if (!player)
+																continue;
+
+															//pd3gg!SDK::UObject::IsA()[C:\Users\ShalltearMoist\Documents\Projects\pd3gg\Dumper7\CoreUObject_functions.cpp:118]
+															//pd3gg!MainThread()[C:\Users\ShalltearMoist\Documents\Projects\pd3gg\ssmda.cpp:700]
+
+															if (g_ssdma->Settings->b_VIPChams)
+															{
+																if (player)
+																{
+																	if (player->bIsAlive && player->bCanBeDamaged && !player->bActorIsBeingDestroyed && !player->bIsSurrendered)
+																		player->Multicast_SetMarked(true);
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 	
 	//Func: Function Starbreeze.SBZCharacter.Server_ThrowBag , IDX: 21942
 	//Func: Function Starbreeze.SBZAbilitySystemComponent.c , IDX: 21693
@@ -521,13 +586,13 @@ DWORD WINAPI MainThread(LPVOID dwModule)
 	g_Console->InitializeConsole("DEBUG CONSOLE", true);
 	bool init = g_ssdma->Init();
 	g_Console->LogError("g_ssdma->Init() = %s\n", init ? "TRUE" : "FALSE");
-	/*void* pProcessEvent = (char*)(g_ssdma->gamebase) + PE_Address;
+	void* pProcessEvent = (char*)(g_ssdma->gamebase) + PE_Address;
 	
 	if (!HOOK(pProcessEvent, &hkPE, &oProcessEvent))
 	{
 		g_Console->LogError("[-] Process Event Hook Failed!\n");
 	}
-	else { g_Console->printdbg(Console::Colors.green, "PE Hooked\n"); }*/
+	else { g_Console->printdbg(Console::Colors.green, "PE Hooked\n"); }
 
 	g_Running.store(true);
 
@@ -557,6 +622,7 @@ DWORD WINAPI MainThread(LPVOID dwModule)
 			g_ssdma->FoundBasePointers.store(false);
 		}
 
+		//gun mods
 		if (g_ssdma->GetKeyState(VK_HOME, 0) && ((GetTickCount64() - LastTick) > 500))
 		{
 			if (g_ssdma->_CurrentWorld)
@@ -667,70 +733,7 @@ DWORD WINAPI MainThread(LPVOID dwModule)
 		}
 
 		
-		if (g_ssdma->safeToAccessMemory.load() && g_ssdma->FoundBasePointers.load() && g_ssdma->Settings->b_ESP)
-		{
-			if (g_ssdma->_CurrentWorld)
-			{
-				if (g_ssdma->_CurrentWorld->OwningGameInstance)
-				{
-					if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers.IsValidIndex(0))
-					{
-						if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0])
-						{
-							if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0]->PlayerController)
-							{
-								if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0]->PlayerController->Character)
-								{
-									if (reinterpret_cast<SDK::ASBZPlayerCharacter*>(g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0]->PlayerController->Character)->bIsAlive)
-									{
-										SDK::UClass* ACH_BaseCop_C = SDK::ACH_BaseCop_C::StaticClass();
-										if (ACH_BaseCop_C)
-										{
-											SDK::AActor* CurrentAActor = nullptr;
-
-											if (g_ssdma->_CurrentWorld->PersistentLevel->Actors.IsValid())
-											{
-												for (int i = 0; i < g_ssdma->_CurrentWorld->PersistentLevel->Actors.Num(); ++i)
-												{
-													if (g_ssdma->_CurrentWorld->PersistentLevel->Actors.IsValidIndex(i))
-													{
-														if (g_ssdma->_CurrentWorld->PersistentLevel->Actors[i])
-														{
-															CurrentAActor = g_ssdma->_CurrentWorld->PersistentLevel->Actors[i];
-															if (!CurrentAActor)
-																continue;
-
-															if (CurrentAActor->IsA(ACH_BaseCop_C))
-															{
-																SDK::ASBZAICharacter* player = reinterpret_cast<SDK::ASBZAICharacter*>(g_ssdma->_CurrentWorld->PersistentLevel->Actors[i]);
-																if (!player)
-																	continue;
-
-																//pd3gg!SDK::UObject::IsA()[C:\Users\ShalltearMoist\Documents\Projects\pd3gg\Dumper7\CoreUObject_functions.cpp:118]
-																//pd3gg!MainThread()[C:\Users\ShalltearMoist\Documents\Projects\pd3gg\ssmda.cpp:700]
-
-																if (g_ssdma->Settings->b_VIPChams)
-																{
-																	if (player)
-																	{
-																		if (player->bIsAlive && player->bCanBeDamaged && !player->bActorIsBeingDestroyed && !player->bIsSurrendered)
-																			player->Multicast_SetMarked(true);
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		
 
 		if (GetKeyState(VK_END) & 1)
 		{
@@ -755,7 +758,7 @@ DWORD WINAPI MainThread(LPVOID dwModule)
 			MH_Uninitialize();
 		}
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 
 	//if loop breaks, do exit.
