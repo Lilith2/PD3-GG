@@ -1,0 +1,5 @@
+*.vsidx
+*.ipch
+*.bin
+*.db
+/.vs
