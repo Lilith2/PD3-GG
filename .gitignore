@@ -4,3 +4,5 @@
 *.db
 /.vs
 /pd3gg/x64
+/pd3gg/x64
+/x64/Debug
