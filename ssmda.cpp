@@ -305,13 +305,16 @@ void __fastcall hkPE(SDK::UObject* obj, SDK::UFunction* func, void* params)
 							{
 								if (reinterpret_cast<SDK::ASBZPlayerCharacter*>(g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0]->PlayerController->Character)->bIsAlive)
 								{
-									SDK::UClass* ACH_BaseCop_C = SDK::ACH_BaseCop_C::StaticClass();
+									static auto ACH_BaseCop_C = SDK::ACH_BaseCop_C::StaticClass();
 									if (ACH_BaseCop_C)
 									{
 										SDK::AActor* CurrentAActor = nullptr;
 
 										static auto UGameplayStatics = *(SDK::UGameplayStatics*)SDK::UGameplayStatics::StaticClass();
-										
+										g_ssdma->TArray_ASBZAICharacterList.Clear();
+										//crashes on this line if esp is enabled at any point. Idk why. syntax is correct and use case is correct.
+										//process event is called over 8000 times per second, probably overloading something?
+										//maybe make a queued timer thing to signal to main thread we can loop through the actors to set marked?
 										UGameplayStatics.GetAllActorsOfClass(g_ssdma->_CurrentWorld, ACH_BaseCop_C, &g_ssdma->TArray_ASBZAICharacterList);
 
 										if (g_ssdma->TArray_ASBZAICharacterList.IsValid())
@@ -332,7 +335,7 @@ void __fastcall hkPE(SDK::UObject* obj, SDK::UFunction* func, void* params)
 
 														if (g_ssdma->Settings->b_VIPChams)
 														{
-															if (player)
+															if (player->MarkedOutline)
 															{
 																if (player->bIsAlive && player->bCanBeDamaged && !player->bActorIsBeingDestroyed && !player->bIsSurrendered)
 																	player->Multicast_SetMarked(true);
@@ -730,7 +733,20 @@ DWORD WINAPI MainThread(LPVOID dwModule)
 			LastTick = GetTickCount64();
 		}
 
-		
+		if (g_ssdma->GetKeyState(VK_F5, 0) && ((GetTickCount64() - LastTick) > 500))
+		{
+			if (g_ssdma->Settings->b_ESP)
+			{
+				g_ssdma->Settings->b_ESP = false;
+				g_Console->printdbg(g_Console->Colors.red, "ESP Disabled!\n");
+			}
+			else
+			{
+				g_ssdma->Settings->b_ESP = true;
+				g_Console->printdbg(g_Console->Colors.green, "ESP Enabled!\n");
+			}
+			LastTick = GetTickCount64();
+		}
 		
 
 		if (GetKeyState(VK_END) & 1)
