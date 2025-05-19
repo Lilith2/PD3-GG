@@ -289,71 +289,7 @@ void __fastcall hkPE(SDK::UObject* obj, SDK::UFunction* func, void* params)
 		g_Console->WriteToFile("Func: %s , IDX: %d\n", name.c_str(), idx);
 	}
 
-	if (g_ssdma->safeToAccessMemory.load() && g_ssdma->FoundBasePointers.load() && g_ssdma->Settings->b_ESP)
-	{
-		if (g_ssdma->_CurrentWorld)
-		{
-			if (g_ssdma->_CurrentWorld->OwningGameInstance)
-			{
-				if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers.IsValidIndex(0))
-				{
-					if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0])
-					{
-						if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0]->PlayerController)
-						{
-							if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0]->PlayerController->Character)
-							{
-								if (reinterpret_cast<SDK::ASBZPlayerCharacter*>(g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0]->PlayerController->Character)->bIsAlive)
-								{
-									static auto ACH_BaseCop_C = SDK::ACH_BaseCop_C::StaticClass();
-									if (ACH_BaseCop_C)
-									{
-										SDK::AActor* CurrentAActor = nullptr;
-
-										static auto UGameplayStatics = *(SDK::UGameplayStatics*)SDK::UGameplayStatics::StaticClass();
-										g_ssdma->TArray_ASBZAICharacterList.Clear();
-										//crashes on this line if esp is enabled at any point. Idk why. syntax is correct and use case is correct.
-										//process event is called over 8000 times per second, probably overloading something?
-										//maybe make a queued timer thing to signal to main thread we can loop through the actors to set marked?
-										UGameplayStatics.GetAllActorsOfClass(g_ssdma->_CurrentWorld, ACH_BaseCop_C, &g_ssdma->TArray_ASBZAICharacterList);
-
-										if (g_ssdma->TArray_ASBZAICharacterList.IsValid())
-										{
-											for (int i = 0; i < g_ssdma->TArray_ASBZAICharacterList.Num(); ++i)
-											{
-												if (g_ssdma->TArray_ASBZAICharacterList.IsValidIndex(i))
-												{
-													if (g_ssdma->TArray_ASBZAICharacterList[i])
-													{
-														CurrentAActor = g_ssdma->TArray_ASBZAICharacterList[i];
-														if (!CurrentAActor)
-															continue;
-
-														SDK::ASBZAICharacter* player = reinterpret_cast<SDK::ASBZAICharacter*>(g_ssdma->_CurrentWorld->PersistentLevel->Actors[i]);
-														if (!player)
-															continue;
-
-														if (g_ssdma->Settings->b_VIPChams)
-														{
-															if (player->MarkedOutline)
-															{
-																if (player->bIsAlive && player->bCanBeDamaged && !player->bActorIsBeingDestroyed && !player->bIsSurrendered)
-																	player->Multicast_SetMarked(true);
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+	
 	
 	//Func: Function Starbreeze.SBZCharacter.Server_ThrowBag , IDX: 21942
 	//Func: Function Starbreeze.SBZAbilitySystemComponent.c , IDX: 21693
@@ -748,6 +684,69 @@ DWORD WINAPI MainThread(LPVOID dwModule)
 			LastTick = GetTickCount64();
 		}
 		
+		if (g_ssdma->safeToAccessMemory.load() && g_ssdma->FoundBasePointers.load() && g_ssdma->Settings->b_ESP)
+		{
+			if (g_ssdma->_CurrentWorld)
+			{
+				if (g_ssdma->_CurrentWorld->OwningGameInstance)
+				{
+					if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers.IsValidIndex(0))
+					{
+						if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0])
+						{
+							if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0]->PlayerController)
+							{
+								if (g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0]->PlayerController->Character)
+								{
+									if (reinterpret_cast<SDK::ASBZPlayerCharacter*>(g_ssdma->_CurrentWorld->OwningGameInstance->LocalPlayers[0]->PlayerController->Character)->bIsAlive)
+									{
+										static auto ACH_BaseCop_C = SDK::ACH_BaseCop_C::StaticClass();
+										if (ACH_BaseCop_C)
+										{
+											SDK::AActor* CurrentAActor = nullptr;
+
+											static auto UGameplayStatics = *(SDK::UGameplayStatics*)SDK::UGameplayStatics::StaticClass();
+											g_ssdma->TArray_ASBZAICharacterList.Clear();
+											//maybe make a queued timer thing to signal to main thread we can loop through the actors to set marked?
+											UGameplayStatics.GetAllActorsOfClass(g_ssdma->_CurrentWorld, ACH_BaseCop_C, &g_ssdma->TArray_ASBZAICharacterList);
+
+											if (g_ssdma->TArray_ASBZAICharacterList.IsValid())
+											{
+												for (int i = 0; i < g_ssdma->TArray_ASBZAICharacterList.Num(); ++i)
+												{
+													if (g_ssdma->TArray_ASBZAICharacterList.IsValidIndex(i))
+													{
+														if (g_ssdma->TArray_ASBZAICharacterList[i])
+														{
+															CurrentAActor = g_ssdma->TArray_ASBZAICharacterList[i];
+															if (!CurrentAActor)
+																continue;
+
+															SDK::ASBZAICharacter* player = reinterpret_cast<SDK::ASBZAICharacter*>(g_ssdma->TArray_ASBZAICharacterList[i]);
+															if (!player)
+																continue;
+
+															if (g_ssdma->Settings->b_VIPChams)
+															{
+																if (player->MarkedOutline)
+																{
+																	if (player->bIsAlive && player->bCanBeDamaged && !player->bActorIsBeingDestroyed && !player->bIsSurrendered)
+																		player->Multicast_SetMarked(true);
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
 		if (GetKeyState(VK_END) & 1)
 		{
